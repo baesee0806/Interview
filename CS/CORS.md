@@ -11,3 +11,33 @@ CORS(Cross-Origin Resource Sharing)는 출처가 다른 자원들을 공유한�
 위의 구성요소 중에서 Protocol + Host + Port 3가지가 같으면 동일 출처(Origin)라고 합니다.
 
 ![](../Imgs/corsimg2.png)
+
+
+### CORS 동작 방식
+
+- 프리플라이트 요청 (Preflight Request)
+ ![Preflight Request](../Imgs/preflight.png)
+    
+    프리플라이트 요청은 두가지로 나눌수 있다.
+    예비 요청과 본요청으로 나눈다.
+    OPTIONS 메서드를 통해 다른 도메인의 리소스에 요청이 가능한지 (실제 요청이 전송하기에 안전한지) 확인 작업을 하고, 요청이 가능하다면 실제 요청을 보낸다. Cross-origin 요청은 유저 데이터에 영향을 줄 수 있기 때문에 Preflight 요청을 한다.
+
+- 단순 요청 (Simple Request)
+    ![Simple Request](../Imgs/simple.png)
+     Preflight Request와 다르게 요청을 보내면서 즉시 cross origin인지 확인하는데, 다음 조건을 모두 충족해야한다.
+
+    - 메서드는 GET POST HEAD 중 하나
+    - 헤더는 Accept, Accept-Language, Content-Language, Content-Type 만 허용
+    - Content-Type 헤더는 다음의 값들만 허용
+       - application/x-www-form-urlencoded
+       - multipart/form-data
+       - text/plain
+- 인증정보 포함 요청 (Request with Credential)
+
+인증 관련 헤더를 포함할 때 사용하는 요청이다. 브라우저가 제공하는 비동기 리소스 요청 API인 XMLHttpRequest 객체나 fetch API는 별도의 옵션 없이 브라우저의 쿠키 정보나 인증과 관련된 헤더를 기본적으로 요청에 담지 않으므로, credentials 옵션을 변경하지 않고서는 cookie를 주고 받을 수 없다.
+
+옵션은 세가지가 있다.
+
+- omit : 절대로 cookie 들을 전송하거나 받지 않는다.
+- same-origin : 동일 출처(same origin)이라면, user credentials (cookies, basic http auth 등..)을 전송한다. (default 값)
+- include : cross-origin 호출이라 할지라도 언제나 user credentials (cookies, basic http auth 등..)을 전송한다.
